@@ -1,3 +1,13 @@
 default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext: ~
   extensions:
-    MageTest\Magento2Driver\Extension: ~
+    MageTest\Magento2Driver: ~
+    SensioLabs\Behat\PageObjectExtension: ~
+    Behat\MinkExtension:
+      base_url: 'http://m2-product-finder.dev/'
+      sessions:
+        default:
+          magento2: ~

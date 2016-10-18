@@ -2,13 +2,10 @@
 <container xmlns="http://symfony.com/schema/dic/services"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <!--<services>-->
-        <!--<service id="bex.magento2_init_extension.config" class="Bex\Behat\Magento2InitExtension\ServiceContainer\Config" />-->
+    <services>
+        <service id="behat.magento2.test_client" class="MageTest\Magento2Driver\Client\TestCLient">
+            <argument type="service" id="behat.magento2.driver.app"></argument>
+        </service>
+    </services>
 
-        <!--&lt;!&ndash; event listener &ndash;&gt;-->
-        <!--<service id="bex.magento2_init_extension.magento2_init_listener" class="Bex\Behat\Magento2InitExtension\Listener\Magento2InitListener" public="false">-->
-            <!--<tag name="event_dispatcher.subscriber" />-->
-            <!--<argument type="service" id="bex.magento2_init_extension.config" />-->
-        <!--</service>-->
-    <!--</services>-->
 </container>

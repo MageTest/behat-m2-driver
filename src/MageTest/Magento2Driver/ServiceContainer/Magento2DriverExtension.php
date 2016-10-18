@@ -1,19 +1,37 @@
 <?php
 
-namespace MageTest\Magento2Driver;
+namespace MageTest\Magento2Driver\ServiceContainer;
 
-use Behat\Testwork\ServiceContainer\Extension as BehatExtension;
+use Behat\MinkExtension\ServiceContainer\MinkExtension;
+use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
+use MageTest\Magento2Driver\Driver\MageApp;
+use MageTest\Magento2Driver\Driver\Magento2Factory;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-class Extension implements BehatExtension
+class Magento2DriverExtension implements Extension
 {
+    
     const CONFIG_KEY = 'magento2driver';
 
-     /**
+    const KERNEL_ID = 'behat.magento2.driver.app';
+
+    private $magentoDriverFactory;
+
+    /**
+     * Magento2DriverExtension constructor.
+     */
+    public function __construct()
+    {
+
+        $this->magentoDriverFactory = new Magento2Factory();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getConfigKey()
@@ -34,7 +52,12 @@ class Extension implements BehatExtension
      */
     public function initialize(ExtensionManager $extensionManager)
     {
-        // nothing to do here
+        /** @var MinkExtension $mink */
+        $mink = $extensionManager->getExtension(MinkExtension::MINK_ID);
+        $mink->registerDriverFactory(
+            $this->magentoDriverFactory
+        );
+
     }
 
     /**
@@ -78,7 +101,9 @@ class Extension implements BehatExtension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/config'));
         $loader->load('services.xml');
 
-//        $extensionConfig = new Config($config);
-//        $container->set('bex.magento2_init_extension.config', $extensionConfig);
+        $container->setDefinition(
+            self::KERNEL_ID,
+            new Definition(MageApp::class, array($container))
+        );
     }
 }
